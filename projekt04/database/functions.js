@@ -12,17 +12,26 @@ const getResult = query => new Promise((resolve, reject) => {
 });
 
 async function addUser(login, password) {
-    db.exec(`
-        INSERT INTO users
-        (login, password, joinedAt)
-        VALUES ('${login}', '${password}', datetime('now'));
-    `);
-
-    return {successful: true};
+    var isError = false;
+    
+    try {
+        await getResult(`
+            INSERT INTO users
+            (login, password, joinedAt)
+            VALUES ('${login}', '${password}', datetime('now'));
+        `);
+    } catch(error) {
+        isError = error;
+    } finally {
+        return {
+            successful: isError ? false : true,
+            reason: isError
+        };
+    };
 }
 
 async function fetchLogin(userId) {
-    return getResult(`
+    return await getResult(`
         SELECT login
         FROM users
         WHERE userId = ${userId};
@@ -45,14 +54,14 @@ async function removePost(postId) {
 }
 
 async function fetchPosts() {
-    return getResult(`
+    return await getResult(`
         SELECT userId, title, content
         FROM posts;
     `);
 }
 
 async function fetchPost(postId) {
-    return getResult(`
+    return await getResult(`
         SELECT userId, title, content
         FROM posts
         WHERE postId = ${postId};
@@ -60,7 +69,7 @@ async function fetchPost(postId) {
 }
 
 async function login(login, password) {
-    if (getResult(`
+    if (await getResult(`
         SELECT password
         FROM users
         WHERE login = '${login}'

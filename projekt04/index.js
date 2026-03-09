@@ -8,8 +8,8 @@ const app = express();
 
 app.set('views', './public');
 app.set("view engine", "ejs");
-app.use(express.static("public"));
 
+app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -20,15 +20,15 @@ async function render(req, res) {
 app.post("/createAccount", async (req, res) => {
   var params = req.body
 
-  var createAccount = databaseFunctions.addUser(params.login, params.password);
+  var createAccount = await databaseFunctions.addUser(params.login, params.password);
 
   if (createAccount.successful == true) {
         console.log(`Created account!
         Login: ${params.login}
         Password: ${params.password}`);
-  } else {
+  } else { // Error: SQLITE_CONSTRAINT: UNIQUE constraint failed: users.login
         console.log(`Account creation failed!
-        Reason: ${}
+        Reason: ${createAccount.reason}
         Login: ${params.login}
         Password: ${params.password}`);
   };
@@ -38,6 +38,7 @@ app.post("/createAccount", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   var params = req.body
+  
   databaseFunctions.login(params.login, params.password);
 
   render(req, res);
