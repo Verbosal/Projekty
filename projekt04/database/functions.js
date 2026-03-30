@@ -12,20 +12,20 @@ const getResult = query => new Promise((resolve, reject) => {
 });
 
 async function addUser(username, password) {
-    var isError = false;
-    
+    var error = null;
+
     try {
         await getResult(`
             INSERT INTO users
             (username, passhash, createdAt)
             VALUES ("${username}", "${password}", ${Date.now()});
         `);
-    } catch(error) {
-        isError = error;
+    } catch(caughtError) {
+        error = caughtError;
     } finally {
         return {
-            successful: isError ? false : true,
-            reason: isError
+            successful: error == null ? true : false,
+            reason: error
         };
     };
 }
@@ -69,20 +69,13 @@ async function fetchPost(postId) {
 }
 
 async function login(username, password) {
-    if (await getResult(`
-        SELECT password
+    var loginResult = await getResult(`
+        SELECT passhash
         FROM users
-        WHERE login = "${username}"
-    `) == password) {
-        console.log(`${username} successfully logged in using password ${password}!`)
-        return {successful : true};
-    } else {
-        console.log(`Someone tried to log in but failed with credentials:
-            Login: ${username}
-            Password: ${password}`)
+        WHERE username = "${username}"
+    `);
 
-        return {successful : false};
-    };
+    return {successful : ((loginResult[0].passhash == password) ? true : false)};
 }
 
 async function logout(userId) {
@@ -96,6 +89,8 @@ async function checkIfAdmin(userId) {
 async function clear() {
     db.exec("DELETE FROM users");
     db.exec("DELETE FROM posts");
+    db.exec("DELETE FROM session");
+    db.exec("DELETE FROM admins");
 }
 
 export default {

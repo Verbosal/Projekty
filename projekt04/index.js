@@ -1,11 +1,19 @@
 import express from "express";
 
 import databaseFunctions from "./database/functions.js";
-//import session from "./login/session.js";
+import session from "./login/session.js";
 // import auth from "./login/auth.js";
 // import user from "./login/user.js";
 
 const port = process.env.PORT;
+if (port == null) {
+  console.error(
+    `Environment file not attached.
+    Please use the correct command provided in the README.`,
+  );
+  process.exit(1);
+}
+
 const app = express();
 
 app.set('views', './public');
@@ -22,17 +30,21 @@ app.use(express.urlencoded({ extended: true }));
 app.post("/createAccount", async (req, res) => {
   var params = req.body
 
-  var createAccount = await databaseFunctions.addUser(params.login, params.password);
+  var createAccount = await databaseFunctions.addUser(params.username, params.password);
 
   if (createAccount.successful == true) {
         console.log(`Created account!
-        Login: ${params.login}
-        Password: ${params.password}`);
-  } else { // Error: SQLITE_CONSTRAINT: UNIQUE constraint failed: users.login
+        Username: ${params.username}
+        Passhash: ${params.password}`);
+  } else {
         console.log(`Account creation failed!
         Reason: ${createAccount.reason}
-        Login: ${params.login}
-        Password: ${params.password}`);
+        Username: ${params.username}
+        Passhash: ${params.password}`);
+
+        if (createAccount.reason.errno == 19) {
+          console.log("This was because another account with the same username already exists");
+        }
   };
 
   res.render("index");
@@ -41,17 +53,27 @@ app.post("/createAccount", async (req, res) => {
 app.post("/login", async (req, res) => {
   var params = req.body
   
-  if ((await databaseFunctions.login(params.login, params.password)).successful) {
-     session.createSession();
+  var logIntoAccount = await databaseFunctions.login(params.username, params.password);
+
+  if (logIntoAccount.successful) {
+        console.log(`Logged in!
+        Username: ${params.username}
+        Passhash: ${params.password}`);
+
+        session.createSession(params.username, res);
+  } else {
+        console.log(`Log in failed!
+        Username: ${params.username}
+        Passhash: ${params.password}`);
   };
 
-  res.render("index");
+  res.render("index", {loggedIn : logIntoAccount.successful});
 });
 
 app.get("/logout", async (req, res) => {
   var params = req.body
   
-  databaseFunctions.logout(params.login, params.password);
+  databaseFunctions.logout(params.username, params.password);
 
   res.render("index");
 });
@@ -64,8 +86,10 @@ app.post("/createPost", async (req, res) => {
 });
 
 app.all("/", (req, res)=>{
-  res.render("index");
+  res.render("index", {posts : databaseFunctions.fetchPosts()});
 });
+
+databaseFunctions.clear();
 
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);

@@ -7,8 +7,8 @@ WIP!!!
 - See all posts,
 - Or you can be an admin and modify/delete other people's posts!
 
-First, if you'd like to be an admin, set up your desired credentials in ```/database/admin.json```.\
-Then, just run\
+First, if you'd like to be an admin, set up your desired credentials in ```/database/admin.json```. That account will be created on startup.\
+Then, simply run\
 ```node --env-file=./login/generate_env.bash --no-warnings index.js```\
 to start hosting the website @ localhost:1337.\
 
