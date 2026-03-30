@@ -1,5 +1,6 @@
 import argon2 from "argon2";
 import sqlite3 from "sqlite3";
+import session from "../login/session.js";
 const db = new sqlite3.Database("./database/database.db");
 
 const HASH_PARAMS = {
@@ -80,7 +81,7 @@ async function login(username, password) {
         WHERE username = "${username}"
     `))[0];
 
-    return {successful : ((await argon2.verify(loginResult.passhash, password, HASH_PARAMS)) ? true : false)};
+    return {successful : (loginResult && (await argon2.verify(loginResult.passhash, password, HASH_PARAMS)) ? true : false)};
 }
 
 async function fetchUserId(username) {
@@ -91,19 +92,27 @@ async function fetchUserId(username) {
     `)).userId;
 }
 
-async function checkIfAdmin(userId) {
-    return false;
+async function fetchUserIds() {
+    return (await getResult(`
+        SELECT userId
+        FROM users;
+    `));
 }
 
-async function fetchUserId(username) {
-    
+async function checkIfAdmin(userId) {
+    return false;//lmao
+}
+
+async function logout(user) {
+    if (user != null) {
+        session.deleteSession(user);
+    }
 }
 
 async function clear() {
-    db.exec("DELETE FROM users");
-    db.exec("DELETE FROM posts");
-    db.exec("DELETE FROM session");
-    db.exec("DELETE FROM admins");
+    ["users", "posts", "session", "admins"].forEach((table)=>{
+        db.exec(`DELETE FROM ${table}`);
+    });
 }
 
 export default {
@@ -113,6 +122,7 @@ export default {
     fetchPosts,
     fetchUsername,
     fetchUserId,
+    fetchUserIds,
     addUser,
     login,
     logout,

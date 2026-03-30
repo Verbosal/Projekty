@@ -64,22 +64,20 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/logout", async (req, res) => {
-  var params = req.body
-  
-  databaseFunctions.logout(params.username, params.password);
+  databaseFunctions.logout(res.locals.user);
 
-  res.render("index");
+  res.redirect("/");
 });
 
 app.post("/createPost", async (req, res) => {
   var params = req.body
-  databaseFunctions.addPost(databaseFunctions.fetchUserId(username), params.title, params.content);
+  databaseFunctions.addPost(databaseFunctions.fetchUserId(params.username), params.title, params.content);
 
   console.log(`New post!
   Title: ${params.title}
   Content: ${params.content}`);
 
-  res.render("index");
+  res.redirect("/");
 });
 
 app.all("/", (req, res)=>{
@@ -87,6 +85,11 @@ app.all("/", (req, res)=>{
 });
 
 databaseFunctions.clear();
+
+import populate from "./database/populate.js";
+if (process.env.POPULATE_DB == true) {
+  populate();
+};
 
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
