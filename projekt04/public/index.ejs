@@ -6,11 +6,15 @@
     <title>the silly forum!!!</title>
 </head>
 <body>
-    <% if (!locals.loggedIn) { %>
+    <% if (!locals.login) { %>
+       <% locals.login = false %>
+    <% }%>
+
+    <% if (!locals.login.successful) { %>
         <%- include("loginForm.ejs") %>
     <% }%>
 
-    <% if (locals.loggedIn) { %>
+    <% if (locals.login.successful) { %>
         <%- include("content.ejs") %>
     <% }%>
 

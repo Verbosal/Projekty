@@ -1,5 +1,10 @@
+import argon2 from "argon2";
 import sqlite3 from "sqlite3";
 const db = new sqlite3.Database("./database/database.db");
+
+const HASH_PARAMS = {
+  secret: Buffer.from(process.env.PEPPER, "hex"),
+};
 
 const getResult = query => new Promise((resolve, reject) => {
   db.all(query, (err, row) => {
@@ -18,7 +23,7 @@ async function addUser(username, password) {
         await getResult(`
             INSERT INTO users
             (username, passhash, createdAt)
-            VALUES ("${username}", "${password}", ${Date.now()});
+            VALUES ("${username}", "${await argon2.hash(password, HASH_PARAMS)}", ${Date.now()});
         `);
     } catch(caughtError) {
         error = caughtError;
@@ -69,21 +74,29 @@ async function fetchPost(postId) {
 }
 
 async function login(username, password) {
-    var loginResult = await getResult(`
+    var loginResult = (await getResult(`
         SELECT passhash
         FROM users
         WHERE username = "${username}"
-    `);
+    `))[0];
 
-    return {successful : ((loginResult[0].passhash == password) ? true : false)};
+    return {successful : ((await argon2.verify(loginResult.passhash, password, HASH_PARAMS)) ? true : false)};
 }
 
-async function logout(userId) {
-
+async function fetchUserId(username) {
+    return (await getResult(`
+        SELECT userId
+        FROM users
+        WHERE username = ${username};
+    `)).userId;
 }
 
 async function checkIfAdmin(userId) {
     return false;
+}
+
+async function fetchUserId(username) {
+    
 }
 
 async function clear() {
@@ -99,6 +112,7 @@ export default {
     fetchPost,
     fetchPosts,
     fetchUsername,
+    fetchUserId,
     addUser,
     login,
     logout,
