@@ -77,7 +77,7 @@ app.post("/createPost", async (req, res) => {
   Title: ${params.title}
   Content: ${params.content}`);
 
-  res.redirect("/");
+  res.render("index");
 });
 
 app.all("/", (req, res)=>{
