@@ -87,9 +87,14 @@ app.all("/", (req, res)=>{
 databaseFunctions.clear();
 
 import populate from "./database/populate.js";
-if (process.env.POPULATE_DB == true) {
+if (Boolean(process.env.POPULATE_DB)) {
   populate();
 };
+
+import admin from "./database/admin.json" with { type: "json" };
+databaseFunctions.addUser(admin.username, admin.password);
+databaseFunctions.grantAdmin(await databaseFunctions.fetchUserId(admin.username));
+
 
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);

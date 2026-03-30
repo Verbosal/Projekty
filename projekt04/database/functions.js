@@ -7,6 +7,8 @@ const HASH_PARAMS = {
   secret: Buffer.from(process.env.PEPPER, "hex"),
 };
 
+//W ten sposób nauczyłem się że powinienem był po prostu skorzystać z db.prepare........ teraz wiem :D
+
 const getResult = query => new Promise((resolve, reject) => {
   db.all(query, (err, row) => {
     if (err) {
@@ -48,7 +50,7 @@ async function addPost(userId, title, content) {
     db.exec(`
         INSERT INTO posts
         (userId, title, content, createdAt)
-        VALUES (${userId}, "${title}", "${content}",  ${Date.now()});
+        VALUES (${userId}, "${title}", "${content}", ${Date.now()});
     `);
 }
 
@@ -81,32 +83,53 @@ async function login(username, password) {
         WHERE username = "${username}"
     `))[0];
 
-    return {successful : (loginResult && (await argon2.verify(loginResult.passhash, password, HASH_PARAMS)) ? true : false)};
+    return {successful : (loginResult && (await argon2.verify(loginResult.passhash, password, HASH_PARAMS)) ? true : false)}; 
 }
 
 async function fetchUserId(username) {
-    return (await getResult(`
-        SELECT userId
+    var fetchResult = (await getResult(`
+        SELECT id
         FROM users
-        WHERE username = ${username};
-    `)).userId;
+        WHERE username = "${username}";
+    `))[0];
+
+    return (fetchResult !== undefined ? fetchResult.id : null); //javascript moment
 }
 
 async function fetchUserIds() {
     return (await getResult(`
-        SELECT userId
+        SELECT id
         FROM users;
     `));
 }
 
 async function checkIfAdmin(userId) {
-    return false;//lmao
+    return (await getResult(`
+        SELECT userId
+        FROM admins
+        WHERE userId = "${userId}";
+    `)).length == 1;
 }
 
 async function logout(user) {
     if (user != null) {
         session.deleteSession(user);
     }
+}
+
+async function grantAdmin(userId) {
+    db.exec(`
+        INSERT INTO admins
+        (userID)
+        VALUES ("${userId}");
+    `);
+}
+
+async function revokeAdmin(userId) {
+    db.exec(`
+        DELETE FROM admins
+        WHERE userId = "${userId}";
+    `);
 }
 
 async function clear() {
@@ -127,5 +150,7 @@ export default {
     login,
     logout,
     checkIfAdmin,
+    grantAdmin,
+    revokeAdmin,
     clear
 }
