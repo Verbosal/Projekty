@@ -1,9 +1,6 @@
 import express from "express";
-
 import databaseFunctions from "./database/functions.js";
 import session from "./login/session.js";
-// import auth from "./login/auth.js";
-// import user from "./login/user.js";
 
 const port = process.env.PORT;
 if (port == null) {
@@ -22,10 +19,6 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// async function render(req, res) {
-//   res.render("index");
-// }
 
 app.post("/createAccount", async (req, res) => {
   var params = req.body
@@ -47,15 +40,15 @@ app.post("/createAccount", async (req, res) => {
         }
   };
 
-  res.render("index");
+  res.render("index", {errorMessage : createAccount});
 });
 
 app.post("/login", async (req, res) => {
   var params = req.body
   
-  var logIntoAccount = await databaseFunctions.login(params.username, params.password);
+  var result = await databaseFunctions.login(params.username, params.password);
 
-  if (logIntoAccount.successful) {
+  if (result.successful) {
         console.log(`Logged in!
         Username: ${params.username}
         Passhash: ${params.password}`);
@@ -67,29 +60,41 @@ app.post("/login", async (req, res) => {
         Passhash: ${params.password}`);
   };
 
-  res.render("index", {loggedIn : logIntoAccount.successful});
+  res.render("index", {login : result, posts : await databaseFunctions.fetchPosts()});
 });
 
 app.get("/logout", async (req, res) => {
-  var params = req.body
-  
-  databaseFunctions.logout(params.username, params.password);
+  databaseFunctions.logout(res.locals.user);
 
-  res.render("index");
+  res.redirect("/");
 });
 
 app.post("/createPost", async (req, res) => {
   var params = req.body
-  databaseFunctions.addPost(1, params.title, params.content);
+  databaseFunctions.addPost(databaseFunctions.fetchUserId(params.username), params.title, params.content);
+
+  console.log(`New post!
+  Title: ${params.title}
+  Content: ${params.content}`);
 
   res.render("index");
 });
 
 app.all("/", (req, res)=>{
-  res.render("index", {posts : databaseFunctions.fetchPosts()});
+  res.render("index");
 });
 
 databaseFunctions.clear();
+
+import populate from "./database/populate.js";
+if (Boolean(process.env.POPULATE_DB)) {
+  populate();
+};
+
+import admin from "./database/admin.json" with { type: "json" };
+databaseFunctions.addUser(admin.username, admin.password);
+databaseFunctions.grantAdmin(await databaseFunctions.fetchUserId(admin.username));
+
 
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);

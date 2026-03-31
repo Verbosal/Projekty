@@ -1,5 +1,13 @@
+import argon2 from "argon2";
 import sqlite3 from "sqlite3";
+import session from "../login/session.js";
 const db = new sqlite3.Database("./database/database.db");
+
+const HASH_PARAMS = {
+  secret: Buffer.from(process.env.PEPPER, "hex"),
+};
+
+//W ten sposób nauczyłem się że powinienem był po prostu skorzystać z db.prepare........ teraz wiem :D
 
 const getResult = query => new Promise((resolve, reject) => {
   db.all(query, (err, row) => {
@@ -18,7 +26,7 @@ async function addUser(username, password) {
         await getResult(`
             INSERT INTO users
             (username, passhash, createdAt)
-            VALUES ("${username}", "${password}", ${Date.now()});
+            VALUES ("${username}", "${await argon2.hash(password, HASH_PARAMS)}", ${Date.now()});
         `);
     } catch(caughtError) {
         error = caughtError;
@@ -42,7 +50,7 @@ async function addPost(userId, title, content) {
     db.exec(`
         INSERT INTO posts
         (userId, title, content, createdAt)
-        VALUES (${userId}, "${title}", "${content}",  ${Date.now()});
+        VALUES (${userId}, "${title}", "${content}", ${Date.now()});
     `);
 }
 
@@ -69,28 +77,65 @@ async function fetchPost(postId) {
 }
 
 async function login(username, password) {
-    var loginResult = await getResult(`
+    var loginResult = (await getResult(`
         SELECT passhash
         FROM users
         WHERE username = "${username}"
-    `);
+    `))[0];
 
-    return {successful : ((loginResult[0].passhash == password) ? true : false)};
+    return {successful : (loginResult && (await argon2.verify(loginResult.passhash, password, HASH_PARAMS)) ? true : false)}; 
 }
 
-async function logout(userId) {
+async function fetchUserId(username) {
+    var fetchResult = (await getResult(`
+        SELECT id
+        FROM users
+        WHERE username = "${username}";
+    `))[0];
 
+    return (fetchResult !== undefined ? fetchResult.id : null); //javascript moment
+}
+
+async function fetchUserIds() {
+    return (await getResult(`
+        SELECT id
+        FROM users;
+    `));
 }
 
 async function checkIfAdmin(userId) {
-    return false;
+    return (await getResult(`
+        SELECT userId
+        FROM admins
+        WHERE userId = "${userId}";
+    `)).length == 1;
+}
+
+async function logout(user) {
+    if (user != null) {
+        session.deleteSession(user);
+    }
+}
+
+async function grantAdmin(userId) {
+    db.exec(`
+        INSERT INTO admins
+        (userID)
+        VALUES ("${userId}");
+    `);
+}
+
+async function revokeAdmin(userId) {
+    db.exec(`
+        DELETE FROM admins
+        WHERE userId = "${userId}";
+    `);
 }
 
 async function clear() {
-    db.exec("DELETE FROM users");
-    db.exec("DELETE FROM posts");
-    db.exec("DELETE FROM session");
-    db.exec("DELETE FROM admins");
+    ["users", "posts", "session", "admins"].forEach((table)=>{
+        db.exec(`DELETE FROM ${table}`);
+    });
 }
 
 export default {
@@ -99,9 +144,13 @@ export default {
     fetchPost,
     fetchPosts,
     fetchUsername,
+    fetchUserId,
+    fetchUserIds,
     addUser,
     login,
     logout,
     checkIfAdmin,
+    grantAdmin,
+    revokeAdmin,
     clear
 }
