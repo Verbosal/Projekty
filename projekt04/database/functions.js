@@ -1,13 +1,18 @@
+// Imports
 import argon2 from "argon2";
 import sqlite3 from "sqlite3";
 import session from "../login/session.js";
+import populationTemplates from "./populate.json" with {type: "json"};
+import admins from "./admins.json" with { type: "json" };
 const db = new sqlite3.Database("./database/database.db");
 
-const HASH_PARAMS = {
-  secret: Buffer.from(process.env.PEPPER, "hex"),
-};
+if (process.env.PEPPER) {
+    const HASH_PARAMS = {
+        secret: Buffer.from(process.env.PEPPER, "hex"),
+    };
+}
 
-//W ten sposób nauczyłem się że powinienem był po prostu skorzystać z db.prepare........ teraz wiem :D
+// Prepare statements here plsssss :p
 
 const getResult = query => new Promise((resolve, reject) => {
   db.all(query, (err, row) => {
@@ -33,7 +38,8 @@ async function addUser(username, password) {
     } finally {
         return {
             successful: error == null ? true : false,
-            reason: error
+            reason: error,
+            userId : fetchUserId(username)
         };
     };
 }
@@ -112,7 +118,7 @@ async function checkIfAdmin(userId) {
 }
 
 async function logout(user) {
-    if (user != null) {
+    if (user !== null) {
         session.deleteSession(user);
     }
 }
@@ -138,6 +144,26 @@ async function clear() {
     });
 }
 
+Array.prototype.random = function () { //stack overflow my beloved
+  return this[Math.floor((Math.random()*this.length))];
+}
+
+function populate() {
+    let templates = populationTemplates
+
+    templates.usernames.forEach((username)=>{
+        let operation = addUser(username, templates.passwords.random()).then(async ()=>{
+            addPost(await operation.userId, templates.titles.random(), templates.contents.random());
+        });
+    })
+}
+
+function createAdmins() {
+    admins.forEach(async (admin)=>{
+        grantAdmin(await addUser(admin.username, admin.password).userId);
+    })
+}
+
 export default {
     addPost,
     removePost,
@@ -152,5 +178,9 @@ export default {
     checkIfAdmin,
     grantAdmin,
     revokeAdmin,
-    clear
+    clear,
+    populate,
+    createAdmins
 }
+
+// I use linux by the way

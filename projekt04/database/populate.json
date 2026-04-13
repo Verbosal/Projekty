@@ -1,0 +1,7 @@
+{
+    "usernames" : ["John Doe", "Jane Doe"],
+    "passwords" : ["1234", "password"],
+
+    "titles" : ["Hello world!", "New post"],
+    "contents" : ["Lorem ipsum", "Placeholder"]
+}

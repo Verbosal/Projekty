@@ -1,9 +1,7 @@
-import express from "express";
-import databaseFunctions from "./database/functions.js";
-import session from "./login/session.js";
+const environment = process.env //Attached environment file
+const port = environment.PORT;
 
-const port = process.env.PORT;
-if (port == null) {
+if (port === undefined) { //Check for environment file
   console.error(
     `Environment file not attached.
     Please use the correct command provided in the README.`,
@@ -11,29 +9,28 @@ if (port == null) {
   process.exit(1);
 }
 
-const app = express();
+//Imports
+import express from "express";
+import databaseFunctions from "./database/functions.js";
+import session from "./login/session.js";
 
+// Constants
+const app = express();
 app.set('views', './public');
 app.set("view engine", "ejs");
-
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//Routes
 app.post("/createAccount", async (req, res) => {
   var params = req.body
-
   var createAccount = await databaseFunctions.addUser(params.username, params.password);
 
   if (createAccount.successful == true) {
-        console.log(`Created account!
-        Username: ${params.username}
-        Passhash: ${params.password}`);
+        console.log("Account created account successful!");
   } else {
-        console.log(`Account creation failed!
-        Reason: ${createAccount.reason}
-        Username: ${params.username}
-        Passhash: ${params.password}`);
+        console.log("Account creation failed!");
 
         if (createAccount.reason.errno == 19) {
           console.log("This was because another account with the same username already exists");
@@ -45,19 +42,13 @@ app.post("/createAccount", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   var params = req.body
-  
   var result = await databaseFunctions.login(params.username, params.password);
 
   if (result.successful) {
-        console.log(`Logged in!
-        Username: ${params.username}
-        Passhash: ${params.password}`);
-
+        console.log("Login attempt successful!");
         session.createSession(params.username, res);
   } else {
-        console.log(`Log in failed!
-        Username: ${params.username}
-        Passhash: ${params.password}`);
+        console.log("Login attempt failed!");
   };
 
   res.render("index", {login : result, posts : await databaseFunctions.fetchPosts()});
@@ -72,10 +63,7 @@ app.get("/logout", async (req, res) => {
 app.post("/createPost", async (req, res) => {
   var params = req.body
   databaseFunctions.addPost(databaseFunctions.fetchUserId(params.username), params.title, params.content);
-
-  console.log(`New post!
-  Title: ${params.title}
-  Content: ${params.content}`);
+  console.log("New post!");
 
   res.render("index");
 });
@@ -84,18 +72,24 @@ app.all("/", (req, res)=>{
   res.render("index");
 });
 
-databaseFunctions.clear();
+// Optional operations before running the website
+let operations = {
+  [environment.CLEAR_DB] : databaseFunctions.clear, // Reset the database
+  [environment.POPULATE_DB] : databaseFunctions.populate, // Populate with examples
+  [environment.CREATE_ADMINS] : databaseFunctions.createAdmins // Create admin(s)
+}
 
-import populate from "./database/populate.js";
-if (Boolean(process.env.POPULATE_DB)) {
-  populate();
-};
+// Execute before 
+for (let [check, operation] of Object.entries(operations)) {
+  if (Boolean(check)) {
+    operation()
+  }
+}
 
-import admin from "./database/admin.json" with { type: "json" };
-databaseFunctions.addUser(admin.username, admin.password);
-databaseFunctions.grantAdmin(await databaseFunctions.fetchUserId(admin.username));
-
-
+// Start hosting
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
 });
+
+// the worst thing about commenting is that it makes you look like a clanker 😭 which I AM NOT
+// lmao Why does code support emojis

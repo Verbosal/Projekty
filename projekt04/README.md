@@ -1,3 +1,5 @@
+Revision WIP!!!
+
 # Simple silly forum
 ## Once you make an account and log in, you can:
 - Make a post,
@@ -9,4 +11,8 @@ First, if you'd like to be an admin, set up your desired credentials in ```/data
 Then, simply run\
 ```node --env-file=./parameters.env --no-warnings index.js```\
 to start hosting the website @ localhost:1337.\
-You can also populate the database with a few example users and posts, check ```./parameters.env```.\
+
+Extra functions:
+- You can set whether to clear the database every time the program is ran
+- You can also populate the database with a few example users and posts.\
+```./parameters.env```.\
