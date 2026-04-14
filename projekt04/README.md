@@ -1,4 +1,4 @@
-Revision WIP!!!
+Major revision WIP!!!
 
 # Simple silly forum
 ## Once you make an account and log in, you can:

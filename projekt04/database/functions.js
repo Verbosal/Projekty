@@ -1,7 +1,7 @@
 // Imports
 import argon2 from "argon2";
 import sqlite3 from "sqlite3";
-import session from "../login/session.js";
+import session from "./session.js";
 import populationTemplates from "./populate.json" with {type: "json"};
 import admins from "./admins.json" with { type: "json" };
 const db = new sqlite3.Database("./database/database.db");

@@ -12,7 +12,7 @@ if (port === undefined) { //Check for environment file
 //Imports
 import express from "express";
 import databaseFunctions from "./database/functions.js";
-import session from "./login/session.js";
+import session from "./database/session.js";
 
 // Constants
 const app = express();
