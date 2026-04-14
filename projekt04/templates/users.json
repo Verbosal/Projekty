@@ -1,0 +1,10 @@
+{
+    "usernames" : [
+        "John Doe",
+        "Jane Doe"
+    ],
+    "passwords" : [
+        "1234",
+        "password"
+    ]
+}
