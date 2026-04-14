@@ -1,15 +1,4 @@
-const environment = process.env // Attached environment file
-const port = environment.PORT;
-
-if (port === undefined) { // Check for environment file
-  console.error(
-    `Environment file not attached.
-Please use the correct command provided in the README.`,
-  );
-  process.exit(1);
-}
-
-// Imports & declarations
+// Express setup
 import express from "express";
 const app = express();
 
@@ -22,23 +11,34 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 // Routes attachment
+// Imports
 import main from "./routes/main.ts";
 import post from "./routes/post.ts";
 import account from "./routes/account.ts";
 
-app.use("/", main);
-app.use("/post", post);
-app.use("/account", account);
+// Router usages
+for (let [path, router] of Object.entries({
+  "/" : main,
+  "/post" : post,
+  "/account" : account
+})) {
+  app.use(path, router);
+}
 
 // Optional operations before running the website
-let operations = {
-  [environment.CREATE_USERS] : "",
-  [environment.CREATE_POSTS] : "",
-  [environment.CREATE_ADMINS] : "",
+import config from "./config.ts";
+let optionals = config.optional;
+let createOperations = optionals.create;
+let clearOperations = optionals.clear;
 
-  [environment.CLEAR_USERS] : "",
-  [environment.CLEAR_POSTS] : "",
-  [environment.CLEAR_ADMIN_PRIVILEGES] : ""
+let operations = {
+  [createOperations.users] : "",
+  [createOperations.posts] : "",
+  [createOperations.admins] : "",
+
+  [clearOperations.users] : "",
+  [clearOperations.posts] : "",
+  [clearOperations.admin_privileges] : ""
 }
 
 // Execute above operations
@@ -49,10 +49,11 @@ let operations = {
 // }
 
 // Start hosting
+const port = config.port;
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
 });
 
-// the worst thing about commenting is that it makes you look like a clanker 😭 which I AM NOT
+// the worst thing about writing actual documentation is that it makes you look like a clanker 😭 which I AM NOT
 // lmao Why does code support emojis
 // język polski

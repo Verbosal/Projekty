@@ -1,8 +1,15 @@
-if (process.env.PEPPER) {
-    const HASH_PARAMS = {
-        secret: Buffer.from(process.env.PEPPER, "hex"),
-    };
+import argon2 from "argon2";
+import env from "dotenv";
+env.config();
+
+if (process.env.PEPPER === undefined) {
+    console.error(`Environment file isn't attached.`,);
+    process.exit(1);
 }
+
+const HASH_PARAMS = {
+    secret: Buffer.from(process.env.PEPPER, "hex"),
+};
 
 async function addUser(username, password) {
     var error = null;
