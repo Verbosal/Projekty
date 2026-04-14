@@ -4,7 +4,7 @@ Major revision WIP!!!
 ## Once you make an account and log in, you can:
 - Make a post,
 - Modify or delete your own posts,
-- See all posts,
+- See all posts and users,
 - Or you can be an admin and modify/delete other people's posts!
 
 First, if you'd like to be an admin, set up your desired credentials in ```/templates/admins.json```. Accounts listed there will be created on startup.\
