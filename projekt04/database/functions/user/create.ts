@@ -11,14 +11,15 @@ const HASH_PARAMS = {
     secret: Buffer.from(process.env.PEPPER, "hex"),
 };
 
-async function addUser(username, password) {
+async function addUser(username : string, password : string) {
     var error = null;
 
     try {
         await getResult(`
             INSERT INTO users
             (username, passhash, createdAt)
-            VALUES ("${username}", "${await argon2.hash(password, HASH_PARAMS)}", ${Date.now()});
+            VALUES ("${username}", "${await argon2.hash(password, HASH_PARAMS)}", ${Date.now()})
+            RETURNING id;
         `);
     } catch(caughtError) {
         error = caughtError;

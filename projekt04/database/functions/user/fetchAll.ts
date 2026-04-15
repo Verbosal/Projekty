@@ -1,4 +1,4 @@
-async function fetch(userId) {
+async function fetch(userId : number) {
     return await getResult(`
         SELECT username
         FROM users

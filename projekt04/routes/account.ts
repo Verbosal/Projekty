@@ -1,7 +1,7 @@
-import express from "express";
+import express, {Request, Response} from "express";
 const router = express.Router();
 
-router.post("/create", async (req, res) => {
+router.post("/create", async (req : Request, res : Response) => {
   var params = req.body
   var createAccount = await databaseFunctions.addUser(params.username, params.password);
 
@@ -18,7 +18,7 @@ router.post("/create", async (req, res) => {
   res.render("index", {errorMessage : createAccount});
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req : Request, res : Response) => {
   var params = req.body
   var result = await databaseFunctions.login(params.username, params.password);
 
@@ -32,7 +32,7 @@ router.post("/login", async (req, res) => {
   res.render("index", {login : result, posts : await databaseFunctions.fetchPosts()});
 });
 
-router.get("/logout", async (req, res) => {
+router.get("/logout", async (req : Request, res : Response) => {
   databaseFunctions.logout(res.locals.user);
 
   res.redirect("/");

@@ -1,7 +1,7 @@
-import express from "express";
+import express, {Request, Response} from "express";
 const router = express.Router();
 
-router.post("/create", async (req, res) => {
+router.post("/create", async (req : Request, res : Response) => {
   var params = req.body
   databaseFunctions.addPost(databaseFunctions.fetchUserId(params.username), params.title, params.content);
   console.log("New post!");

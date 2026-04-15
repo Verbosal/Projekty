@@ -1,3 +1,4 @@
+import {NextFunction, Request, Response} from 'express';
 import { DatabaseSync } from "node:sqlite";
 import { randomBytes } from "node:crypto";
 
@@ -16,11 +17,11 @@ const db_ops = {
   ),
 };
 
-function createSession(user, res) {
+function createSession(userId : number, res : Response) {
   let sessionId = randomBytes(8).readBigInt64BE();
   let createdAt = Date.now();
 
-  let session = db_ops.create_session.get(sessionId, user, createdAt);
+  let session = db_ops.create_session.get(sessionId, userId, createdAt);
   res.locals.session = session;
 
   res.cookie(SESSION_COOKIE, session.id.toString(), {
@@ -32,9 +33,10 @@ function createSession(user, res) {
   return session;
 }
 
-function sessionHandler(req, res, next) {
+function sessionHandler(req : Request, res : Response, next : NextFunction) {
   let sessionId = req.cookies[SESSION_COOKIE];
   let session = null;
+  
   if (sessionId != null) {
     if (!sessionId.match(/^-?[0-9]+$/)) {
       // Invalid session id

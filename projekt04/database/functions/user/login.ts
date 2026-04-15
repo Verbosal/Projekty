@@ -1,4 +1,4 @@
-async function login(username, password) {
+async function login(username : string, password : string) {
     var loginResult = (await getResult(`
         SELECT passhash
         FROM users
