@@ -2,4 +2,5 @@
 node_modules/
 *.log
 db.sqlite
-.env
+# .env <- this project is public code anyways, and everything stored in that file is just scripts to make random numbers, so it makes sense for me to include it.
+# Also you literally need it or else you'd need to recreate it lol!
