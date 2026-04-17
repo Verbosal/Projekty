@@ -1,27 +1,20 @@
-import {NextFunction, Request, Response} from 'express';
-import { DatabaseSync } from "node:sqlite";
-import { randomBytes } from "node:crypto";
+// Imports & declarations
+import statements from '../statements';
+const ops = statements.session
 
-const db = new DatabaseSync("./database/database.db", { readBigInts: true });
+import {NextFunction, Request, Response} from 'express';
+import {DatabaseSync} from "node:sqlite";
+import {randomBytes} from "node:crypto";
+const db = new DatabaseSync("./database/database.db", {readBigInts: true});
 
 const SESSION_COOKIE = "__Host-forum-id";
 const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
 
-const db_ops = {
-  create_session: db.prepare(
-    `INSERT INTO session (id, userId, createdAt)
-            VALUES (?, ?, ?) RETURNING id, userId, createdAt;`
-  ),
-  get_session: db.prepare(
-    "SELECT id, userId, createdAt from session WHERE id = ?;"
-  ),
-};
-
-function createSession(userId : number, res : Response) {
+export function createSession(userId : number, res : Response) {
   let sessionId = randomBytes(8).readBigInt64BE();
   let createdAt = Date.now();
 
-  let session = db_ops.create_session.get(sessionId, userId, createdAt);
+  let session = ops.create.get(sessionId, userId, createdAt);
   res.locals.session = session;
 
   res.cookie(SESSION_COOKIE, session.id.toString(), {
@@ -33,7 +26,7 @@ function createSession(userId : number, res : Response) {
   return session;
 }
 
-function sessionHandler(req : Request, res : Response, next : NextFunction) {
+export function sessionHandler(req : Request, res : Response, next : NextFunction) {
   let sessionId = req.cookies[SESSION_COOKIE];
   let session = null;
   
@@ -47,7 +40,7 @@ function sessionHandler(req : Request, res : Response, next : NextFunction) {
   }
 
   // sessionId may look valid but might not exist in db
-  if (sessionId != null) session = db_ops.get_session.get(sessionId);
+  if (sessionId != null) session = ops.fetch.get(sessionId);
   
   if (session != null) {
     res.locals.session = session;
@@ -76,8 +69,3 @@ function sessionHandler(req : Request, res : Response, next : NextFunction) {
     );
   }
 }
-
-export default {
-  createSession,
-  sessionHandler,
-};

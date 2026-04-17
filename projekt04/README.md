@@ -18,3 +18,5 @@ Then, simply run ```node index.ts``` to start hosting the website @ localhost:13
 
 To customize, simply modify ```./config.ts```.  
 You can also use them at runtime by simply running the corresponding files located in ```./database/functions```.
+
+I'm pleased to say that I didn't use any AI in this :D
