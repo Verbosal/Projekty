@@ -2,9 +2,9 @@
 import sqlite3 from "sqlite3";
 const db = new sqlite3.Database("./database.db");
 
-var statements = {
+let statements = {
     database : {
-        clear : ``
+        clear : `BEGIN TRANSACTION;`
     },
 
     admin : {
@@ -22,14 +22,9 @@ var statements = {
         `,
 
         check : `
-            IF(
-                COUNT(SELECT userId
-                FROM admins
-                WHERE userId = ?;) = 1,
-
-                TRUE,
-                FALSE
-            )
+            SELECT EXISTS(SELECT userId
+            FROM admins
+            WHERE userId = ?)
         `
     },
     
@@ -77,8 +72,8 @@ var statements = {
                 WHERE id = ?;
             `,
 
-            passhash : `
-                SELECT passhash
+            info : `
+                SELECT username, passhash
                 FROM users
                 WHERE userId = ?;
             `,
@@ -109,23 +104,24 @@ var statements = {
 // Add a "clear all" statement to database operations
 for (let [table, operations] of Object.entries(statements)) {
     if (table != "database") {
-        statements.database.clear += "UNION" + operations.clear;
+        statements.database.clear += operations.clear;
     }
 }
 
-statements.database.clear = statements.database.clear.replace("UNION", ""); //Remove the first "UNION"
+statements.database.clear += "COMMIT;";
 
 // Makes every string a prepared statement for execution as SQL!
 function recursivelyPrepare(element : any) {
-    if (element === Object) {
-        element.values().forEach(child => {
+    if (element.constructor == Object) {
+        Object.values(element).forEach(child => {
             recursivelyPrepare(child);
         });
     } else {
         element = db.prepare(element);
+
     }
 }
 
 recursivelyPrepare(statements); //This is why a purely data-driven format isn't to my liking :P
-
+console.log(statements)
 export default statements; //<- yorp

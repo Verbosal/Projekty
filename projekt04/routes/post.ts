@@ -1,9 +1,12 @@
-import express, {Request, Response} from "express";
+import express from "express";
 const router = express.Router();
 
-router.post("/create", async (req : Request, res : Response) => {
+// import * as posts from "../database/functions/post.ts";
+// import * as account from "../database/functions/user.ts";
+
+router.post("/create", async (req : express.Request, res : express.Response) => {
   var params = req.body
-  databaseFunctions.addPost(databaseFunctions.fetchUserId(params.username), params.title, params.content);
+  posts.create(1, params.title, params.content);
   console.log("New post!");
 
   res.render("index");

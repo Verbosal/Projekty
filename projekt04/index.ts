@@ -42,11 +42,11 @@ let operations = {
 }
 
 // Execute above operations
-// for (let [check, operation] of Object.entries(operations)) {
-//   if (Boolean(check)) {
-//     operation()
-//   }
-// }
+for (let [check, operation] of Object.entries(operations)) {
+  if (Boolean(check)) {
+    //operation()
+  }
+}
 
 // Start hosting
 const port = config.port;

@@ -1,9 +1,15 @@
-import express, {Request, Response} from "express";
+import express from "express";
 const router = express.Router();
 
-router.post("/create", async (req : Request, res : Response) => {
+import "../database/statements.ts"
+
+// import * as account from "../database/functions/user.ts";
+// import * as session from "../database/functions/session.ts";
+// import * as posts from "../database/functions/post.ts";
+
+router.post("/create", (req : express.Request, res : express.Response) => {
   var params = req.body
-  var createAccount = await databaseFunctions.addUser(params.username, params.password);
+  var createAccount = account.create(params.username, params.password);
 
   if (createAccount.successful === true) {
         console.log("Account created account successful!");
@@ -18,22 +24,22 @@ router.post("/create", async (req : Request, res : Response) => {
   res.render("index", {errorMessage : createAccount});
 });
 
-router.post("/login", async (req : Request, res : Response) => {
+router.post("/login", async (req : express.Request, res : express.Response) => {
   var params = req.body
-  var result = await databaseFunctions.login(params.username, params.password);
+  var result = await account.login(params.username, params.password);
 
   if (result.successful) {
         console.log("Login attempt successful!");
-        session.createSession(params.username, res);
+        session.create(params.username, res);
   } else {
         console.log("Login attempt failed!");
   };
 
-  res.render("index", {login : result, posts : await databaseFunctions.fetchPosts()});
+  res.render("index", {login : result, posts : posts.fetchAll()});
 });
 
-router.get("/logout", async (req : Request, res : Response) => {
-  databaseFunctions.logout(res.locals.user);
+router.get("/logout", (req : express.Request, res : express.Response) => {
+  account.logout(res.locals.user);
 
   res.redirect("/");
 });

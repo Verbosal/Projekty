@@ -1,16 +1,18 @@
 // Imports & declarations
-import statements from '../statements';
+import statements from '../statements.ts';
 const ops = statements.session
 
-import {NextFunction, Request, Response} from 'express';
+import express from 'express';
+
 import {DatabaseSync} from "node:sqlite";
 import {randomBytes} from "node:crypto";
+
 const db = new DatabaseSync("./database/database.db", {readBigInts: true});
 
 const SESSION_COOKIE = "__Host-forum-id";
 const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
 
-export function createSession(userId : number, res : Response) {
+export function create(userId : number, res : express.Response) {
   let sessionId = randomBytes(8).readBigInt64BE();
   let createdAt = Date.now();
 
@@ -26,7 +28,7 @@ export function createSession(userId : number, res : Response) {
   return session;
 }
 
-export function sessionHandler(req : Request, res : Response, next : NextFunction) {
+export function sessionHandler(req : express.Request, res : express.Response, next : express.NextFunction) {
   let sessionId = req.cookies[SESSION_COOKIE];
   let session = null;
   
@@ -51,7 +53,7 @@ export function sessionHandler(req : Request, res : Response, next : NextFunctio
       secure: true,
     });
   } else {
-    session = createSession(null, res);
+    session = create(null, res);
   }
 
   setImmediate(printUserSession);

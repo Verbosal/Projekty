@@ -1,23 +1,23 @@
 // Imports & declarations
-import statements from '../statements';
+import statements from '../statements.ts';
 const ops = statements.post
 
-import initRandom from './random';
+import initRandom from './random.ts';
 initRandom();
 
-export function createPost(userId : number, title : string, content : string) {
+export function create(userId : number, title : string, content : string) {
     ops.create.run(userId, title, content, Date.now());
 }
 
-export function removePost(postId : number) {
+export function remove(postId : number) {
     ops.remove.run(postId);
 }
 
-export function fetchPost(postId : number) {
+export function fetch(postId : number) {
     return ops.fetch.get(postId);
 }
 
-export function fetchPosts() {
+export function fetchAll() {
     return ops.fetchAll.get(); 
 }
 

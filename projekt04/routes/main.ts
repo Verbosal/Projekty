@@ -1,7 +1,7 @@
-import express, {Request, Response} from "express";
+import express from "express";
 const router = express.Router();
 
-router.all("/", (req : Request, res : Response)=>{
+router.all("/", (req : express.Request, res : express.Response) => {
   res.render("index");
 });
 

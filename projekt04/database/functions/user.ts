@@ -1,10 +1,10 @@
 // Imports & declarations
-import statements from '../statements';
+import statements from '../statements.ts';
 const ops = statements.user
 
-import hashSecret from "../secret";
+import hashSecret from "../secret.ts";
 import argon2 from "argon2";
-import initRandom from './random';
+import initRandom from './random.ts';
 initRandom();
 
 export function create(username : string, password : string) {
@@ -32,7 +32,7 @@ export function fetchAllUsernames() {
 }
 
 export async function login(username : string, password : string) {
-    var loginResult = statements.user
+    var loginResult = statements.user.fetch
 
     return {successful : (loginResult && (await argon2.verify(loginResult.passhash, password, hashSecret)) ? true : false)}; 
 }

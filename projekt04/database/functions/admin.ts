@@ -1,15 +1,15 @@
 // Imports & declarations
-import statements from '../statements';
+import statements from '../statements.ts';
 const ops = statements.admin
 
-import initRandom from './random';
+import initRandom from './random.ts';
 initRandom();
 
-export function checkIfAdmin(userId : number) : boolean {
+export function checkIf(userId : number) : boolean {
     return ops.check(userId);
 }
 
-export function grantAdmin(userId : number) {
+export function grant(userId : number) {
     ops.grant.run(userId);
 }
 
@@ -29,6 +29,6 @@ export function populateAAAAAAAAAAAAA() {
     })
 }
 
-export function revokeAdmin(userId : number) {
+export function revoke(userId : number) {
     ops.revoke.run(userId);
 }
