@@ -2,7 +2,7 @@
 import sqlite3 from "sqlite3";
 const db = new sqlite3.Database("./database.db");
 
-let statements = {
+let statements : any = {
     database : {
         clear : `BEGIN TRANSACTION;`
     },
@@ -118,10 +118,8 @@ function recursivelyPrepare(element : any) {
         });
     } else {
         element = db.prepare(element);
-
     }
 }
 
-recursivelyPrepare(statements); //This is why a purely data-driven format isn't to my liking :P
-console.log(statements)
+recursivelyPrepare(statements); //Things like this is why a purely data-driven format isn't to my liking :P
 export default statements; //<- yorp

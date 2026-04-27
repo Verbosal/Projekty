@@ -21,7 +21,7 @@ export function fetchAll() {
     return ops.fetchAll.get(); 
 }
 
-function populate() {
+export function populate() {
     let templates = populationTemplates
 
     templates.usernames.forEach((username)=>{
@@ -29,4 +29,8 @@ function populate() {
             createUser(await operation.userId, templates.titles.random(), templates.contents.random());
         });
     })
+}
+
+export function clear() {
+    ops.clear.run();
 }

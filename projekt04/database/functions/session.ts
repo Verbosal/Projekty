@@ -1,8 +1,7 @@
 // Imports & declarations
+import express from 'express';
 import statements from '../statements.ts';
 const ops = statements.session
-
-import express from 'express';
 
 import {DatabaseSync} from "node:sqlite";
 import {randomBytes} from "node:crypto";

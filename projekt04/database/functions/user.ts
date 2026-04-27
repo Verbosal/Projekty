@@ -56,3 +56,7 @@ export function populate() { //only users
 export function remove(userId : number) {
     ops.remove.run(userId);
 }
+
+export function clear() {
+    ops.clear.run();
+}

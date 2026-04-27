@@ -32,3 +32,7 @@ export function populateAAAAAAAAAAAAA() {
 export function revoke(userId : number) {
     ops.revoke.run(userId);
 }
+
+export function clear() {
+    ops.clear.run();
+}
