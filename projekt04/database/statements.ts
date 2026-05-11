@@ -1,6 +1,6 @@
 // Imports & declarations
 import sqlite3 from "sqlite3";
-const db = new sqlite3.Database("./database.db");
+const db = new sqlite3.Database("./database/database.db");
 
 let statements : any = {
     database : {
@@ -104,22 +104,27 @@ let statements : any = {
 // Add a "clear all" statement to database operations
 for (let [table, operations] of Object.entries(statements)) {
     if (table != "database") {
-        statements.database.clear += operations.clear;
+        statements.database.clear += " " + operations.clear;
     }
 }
 
-statements.database.clear += "COMMIT;";
+statements.database.clear += " COMMIT;";
 
-// Makes every string a prepared statement for execution as SQL!
-function recursivelyPrepare(element : any) {
-    if (element.constructor == Object) {
-        Object.values(element).forEach(child => {
-            recursivelyPrepare(child);
+//Prepare all statements for SQL
+let preparedStatements : any = {}
+
+function recursivelyPrepare(element : any, parent : any) {
+    if (typeof element == "object") {
+        Object.entries(element).forEach(function([key, value]) {
+            recursivelyPrepare(value, key);
         });
     } else {
-        element = db.prepare(element);
+        preparedStatements[parent] = db.prepare(element);
     }
 }
 
-recursivelyPrepare(statements); //Things like this is why a purely data-driven format isn't to my liking :P
-export default statements; //<- yorp
+recursivelyPrepare(statements, undefined);
+
+console.log(preparedStatements)
+
+export default preparedStatements; //Things like this is why a purely data-driven format isn't to my liking :P

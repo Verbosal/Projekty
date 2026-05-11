@@ -16,9 +16,9 @@ Then, simply run ```node index.ts``` to start hosting the website @ localhost:13
 ## Extra functions you can set:
 - Whether to clear a section of the database on startup (or more),
 - Whether to create admin account(s) on startup,
-- Whether to populate the database with a few example users and posts.
+- Whether to populate the database with a few example posts and users.
 
 To customize, simply modify ```./config.ts```.  
-You can also use them at runtime by simply running the corresponding files located in ```./database/functions```.
+You can also use them by simply running the corresponding files located in ```./database/functions```.
 
 I'm pleased to say that I didn't use any AI in this :D
