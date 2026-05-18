@@ -1,7 +1,7 @@
-// This file prepares statements found in ./statements.json for SQL usage
+// This file prepares everything found in ../statements.json for SQL usage
 
 // Imports & declarations
-import statements from "./statements.json" with {type: "json"};
+import statements from "../statements.json" with {type: "json"};
 import sqlite3 from "sqlite3";
 const db = new sqlite3.Database("./database/database.db");
 

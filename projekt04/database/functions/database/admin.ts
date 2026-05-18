@@ -1,9 +1,7 @@
 // Imports & declarations
+import '../miscellaneous/random.ts';
 import statements from '../statements.ts';
 const ops = statements.admin
-
-// import initRandom from './random.ts';
-// initRandom();
 
 export function checkIf(userId : number) : boolean {
     return ops.check(userId);

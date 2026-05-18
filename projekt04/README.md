@@ -8,7 +8,7 @@
 - Or you can be an admin and modify/delete other people's posts!
 
 ## Setup
-First, if you'd like to be an admin, set up your desired credentials in ```./templates/admins.json```.  
+First, if you'd like to be an admin, set up your desired credentials in ```./database/templates/admins.json```.  
 Accounts listed there will be created on startup.  
   
 Then, simply run ```node index.ts``` to start hosting the website @ localhost:1337 (by default).
@@ -18,7 +18,7 @@ Then, simply run ```node index.ts``` to start hosting the website @ localhost:13
 - Whether to create admin account(s) on startup,
 - Whether to populate the database with a few example posts and users.
 
-To customize, simply modify ```./config.ts```.  
-You can also use them by simply running the corresponding files located in ```./database/functions```.
+To customize, simply modify ```./config.ts``` and ```./database/config.ts```.  
+You can also use them by simply running the corresponding files whose ancestor is ```./database/functions```.
 
 I'm pleased to say that I didn't use any AI in this :D

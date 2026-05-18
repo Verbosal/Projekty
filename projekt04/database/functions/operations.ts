@@ -1,26 +1,25 @@
-// Optional operations before running the website
+// Executes optional operations before running the website defined in ../config.ts
 
 // Imports
-import config from "../../config.ts";
+import config from "../config.ts";
 
 // Routes
-import * as userOperations from "./user.ts";
-import * as adminOperations from "./admin.ts";
-import * as postOperations from "./post.ts";
+import * as user from "./database/user.ts";
+import * as admin from "./database/admin.ts";
+import * as post from "./database/post.ts";
 
 // Declarations
-let optionals = config.optional;
-let createOperations = optionals.create;
-let clearOperations = optionals.clear;
+let create = config.create;
+let clear = config.clear;
 
 let operations : {[boolean] : Function} = {
-  [createOperations.users] : userOperations.populate,
-  [createOperations.posts] : postOperations.populate,
-  [createOperations.admins] : adminOperations.populate,
+  [create.users] : user.populate,
+  [create.posts] : post.populate,
+  [create.admins] : admin.populate,
 
-  [clearOperations.users] : userOperations.clear,
-  [clearOperations.posts] : postOperations.clear,
-  [clearOperations.admin_privileges] : adminOperations.clear
+  [clear.users] : user.clear,
+  [clear.posts] : post.clear,
+  [clear.admin_privileges] : admin.clear
 }
 
 // Execute above operations

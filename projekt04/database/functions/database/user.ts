@@ -1,11 +1,10 @@
 // Imports & declarations
+import argon2 from "argon2";
+import hashSecret from "../miscellaneous/secret.ts";
+import '../miscellaneous/random.ts';
+
 import statements from '../statements.ts';
 const ops = statements.user
-
-import hashSecret from "./secret.ts";
-import argon2 from "argon2";
-import initRandom from './random.ts';
-initRandom();
 
 export function create(username : string, password : string) {
     var error = null;

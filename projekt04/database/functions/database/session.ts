@@ -1,10 +1,11 @@
 // Imports & declarations
 import express from 'express';
-import statements from '../statements.ts';
-const ops = statements.session
 
 import {DatabaseSync} from "node:sqlite";
 import {randomBytes} from "node:crypto";
+
+import statements from '../statements.ts';
+const ops = statements.session
 
 const db = new DatabaseSync("./database/database.db", {readBigInts: true});
 

@@ -1,9 +1,7 @@
 // Imports & declarations
+import '../miscellaneous/random.ts';
 import statements from '../statements.ts';
 const ops = statements.post
-
-// import initRandom from './random.ts';
-// initRandom();
 
 export function create(userId : number, title : string, content : string) {
     ops.create.run(userId, title, content, Date.now());
