@@ -1,0 +1,40 @@
+{
+  "database": {
+    "clear": "BEGIN TRANSACTION;"
+  },
+
+  "admin": {
+    "clear": "DELETE FROM admins",
+    "grant": "INSERT INTO admins(userID) VALUES (?);",
+    "revoke": "DELETE FROM admins WHERE userID = ?;",
+    "check": "SELECT EXISTS(SELECT userId FROM admins WHERE userId = ?)"
+  },
+
+  "post": {
+    "clear": "DELETE FROM posts",
+    "create": "INSERT INTO users(username, passhash, createdAt) VALUES (?, ?, ?) RETURNING id;",
+    "remove": "DELETE FROM posts WHERE id = ?;",
+    
+    "fetch": {
+      "post": "SELECT userId, title, content FROM posts WHERE id = ?;",
+      "allPosts": "SELECT id, title, content FROM posts;"
+    }
+  },
+
+  "user": {
+    "clear": "DELETE FROM users",
+    "remove": "DELETE FROM users WHERE userId = ?",
+
+    "fetch": {
+      "username": "SELECT username FROM users WHERE id = ?;",
+      "info": "SELECT username, passhash FROM users WHERE userId = ?;",
+      "allUsernames": "SELECT username FROM users;"
+    }
+  },
+
+  "session": {
+    "clear": "DELETE FROM sessions",
+    "create": "INSERT INTO sessions (id, userId, createdAt) VALUES (?, ?, ?) RETURNING id, userId, createdAt;",
+    "fetch": "SELECT id, userId, createdAt FROM sessions WHERE id = ?;"
+  }
+}

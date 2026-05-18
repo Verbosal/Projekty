@@ -1,12 +1,12 @@
 // Optional operations before running the website
 
 // Imports
-import config from "../config.ts";
+import config from "../../config.ts";
 
 // Routes
-import * as userOperations from "./functions/user.ts";
-import * as adminOperations from "./functions/admin.ts";
-import * as postOperations from "./functions/post.ts";
+import * as userOperations from "./user.ts";
+import * as adminOperations from "./admin.ts";
+import * as postOperations from "./post.ts";
 
 // Declarations
 let optionals = config.optional;

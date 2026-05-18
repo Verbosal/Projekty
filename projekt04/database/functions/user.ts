@@ -2,7 +2,7 @@
 import statements from '../statements.ts';
 const ops = statements.user
 
-import hashSecret from "../secret.ts";
+import hashSecret from "./secret.ts";
 import argon2 from "argon2";
 import initRandom from './random.ts';
 initRandom();

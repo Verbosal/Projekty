@@ -15,7 +15,7 @@ app.use(express.urlencoded({extended: true}));
 import "./routes/route.ts";
 
 // Optional operations
-import "./database/operations.ts";
+import "./database/functions/operations.ts";
 
 // Start hosting
 app.listen(config.port, () => {
