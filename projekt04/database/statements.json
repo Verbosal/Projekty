@@ -4,14 +4,14 @@
   },
 
   "admin": {
-    "clear": "DELETE FROM admins",
+    "clear": "DELETE FROM admins; DELETE FROM sqlite_sequence WHERE name = admins;",
     "grant": "INSERT INTO admins(userID) VALUES (?);",
     "revoke": "DELETE FROM admins WHERE userID = ?;",
     "check": "SELECT EXISTS(SELECT userId FROM admins WHERE userId = ?)"
   },
 
   "post": {
-    "clear": "DELETE FROM posts",
+    "clear": "DELETE FROM posts; DELETE FROM sqlite_sequence WHERE name = posts;",
     "create": "INSERT INTO users(username, passhash) VALUES (?, ?) RETURNING id;",
     "remove": "DELETE FROM posts WHERE id = ?;",
     
@@ -22,7 +22,7 @@
   },
 
   "user": {
-    "clear": "DELETE FROM users",
+    "clear": "DELETE FROM users; DELETE FROM sqlite_sequence WHERE name = users;",
     "remove": "DELETE FROM users WHERE userId = ?",
 
     "fetch": {
@@ -33,7 +33,7 @@
   },
 
   "session": {
-    "clear": "DELETE FROM sessions",
+    "clear": "DELETE FROM sessions; DELETE FROM sqlite_sequence WHERE name = sessions;",
     "create": "INSERT INTO sessions (id, userId) VALUES (?, ?) RETURNING id, userId, createdAt;",
     "fetch": "SELECT id, userId, createdAt FROM sessions WHERE id = ?;"
   }
