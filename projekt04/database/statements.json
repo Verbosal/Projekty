@@ -7,7 +7,7 @@
     "clear": "DELETE FROM admins; DELETE FROM sqlite_sequence WHERE name = admins;",
     "grant": "INSERT INTO admins(userID) VALUES (?);",
     "revoke": "DELETE FROM admins WHERE userID = ?;",
-    "check": "SELECT EXISTS(SELECT userId FROM admins WHERE userId = ?)"
+    "check": "SELECT EXISTS(SELECT userId FROM admins WHERE userId = ?);"
   },
 
   "post": {
@@ -23,7 +23,7 @@
 
   "user": {
     "clear": "DELETE FROM users; DELETE FROM sqlite_sequence WHERE name = users;",
-    "remove": "DELETE FROM users WHERE userId = ?",
+    "remove": "DELETE FROM users WHERE userId = ?;",
 
     "fetch": {
       "username": "SELECT username FROM users WHERE id = ?;",
