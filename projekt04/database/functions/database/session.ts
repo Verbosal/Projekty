@@ -1,3 +1,5 @@
+// Operations on user sessions
+
 // Imports & declarations
 import express from 'express';
 

@@ -1,3 +1,5 @@
+// Operations on admins
+
 // Imports & declarations
 import '../miscellaneous/random.ts';
 import statements from '../statements.ts';

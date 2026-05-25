@@ -1,3 +1,5 @@
+// Router, ties all the routes together
+
 // Imports
 import express from "express";
 

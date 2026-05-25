@@ -1,3 +1,5 @@
+// Operations on posts
+
 // Imports & declarations
 import '../miscellaneous/random.ts';
 import statements from '../statements.ts';

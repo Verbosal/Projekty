@@ -1,3 +1,5 @@
+// Operations on users
+
 // Imports & declarations
 import argon2 from "argon2";
 import hashSecret from "../miscellaneous/secret.ts";
