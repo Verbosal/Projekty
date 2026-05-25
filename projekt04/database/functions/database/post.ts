@@ -1,10 +1,12 @@
+// Operations on posts
+
 // Imports & declarations
 import '../miscellaneous/random.ts';
 import statements from '../statements.ts';
 const ops = statements.post
 
 export function create(userId : number, title : string, content : string) {
-    ops.create.run(userId, title, content, Date.now());
+    ops.create.run(userId, title, content);
 }
 
 export function remove(postId : number) {

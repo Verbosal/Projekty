@@ -1,6 +1,8 @@
+// Operations on the entire database
+
 // Imports & declarations
 import statements from '../statements.ts';
-const ops = statements.database
+const ops = statements.database;
 
 export function clear() {
     statements.database.clear.run()

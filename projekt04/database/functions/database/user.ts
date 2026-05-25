@@ -1,10 +1,12 @@
+// Operations on users
+
 // Imports & declarations
 import argon2 from "argon2";
 import hashSecret from "../miscellaneous/secret.ts";
 import '../miscellaneous/random.ts';
 
 import statements from '../statements.ts';
-const ops = statements.user
+const ops = statements.user;
 
 export function create(username : string, password : string) {
     var error = null;
@@ -31,7 +33,7 @@ export function fetchAllUsernames() {
 }
 
 export async function login(username : string, password : string) {
-    var loginResult = statements.user.fetch
+    var loginResult = statements.user.fetch;
 
     return {successful : (loginResult && (await argon2.verify(loginResult.passhash, password, hashSecret)) ? true : false)}; 
 }

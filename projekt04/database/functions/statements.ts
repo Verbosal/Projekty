@@ -27,4 +27,4 @@ function recursivelyPrepare(directory : any) {
 
 recursivelyPrepare(statements);
 
-export default statements; //Things like this is why a purely data-driven format isn't to my liking :P
+export default statements;
