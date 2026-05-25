@@ -16,9 +16,8 @@ const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
 
 export function create(userId : number, res : express.Response) {
   let sessionId = randomBytes(8).readBigInt64BE();
-  let createdAt = Date.now();
 
-  let session = ops.create.get(sessionId, userId, createdAt);
+  let session = ops.create.get(sessionId, userId);
   res.locals.session = session;
 
   res.cookie(SESSION_COOKIE, session.id.toString(), {
@@ -69,7 +68,7 @@ export function sessionHandler(req : express.Request, res : express.Response, ne
       "user:",
       session.user,
       "created at:",
-      new Date(Number(session.created_at)).toISOString()
+      new Date(Number(session.createdAt)).toISOString()
     );
   }
 

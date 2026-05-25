@@ -12,7 +12,7 @@
 
   "post": {
     "clear": "DELETE FROM posts",
-    "create": "INSERT INTO users(username, passhash, createdAt) VALUES (?, ?, ?) RETURNING id;",
+    "create": "INSERT INTO users(username, passhash) VALUES (?, ?) RETURNING id;",
     "remove": "DELETE FROM posts WHERE id = ?;",
     
     "fetch": {
@@ -34,7 +34,7 @@
 
   "session": {
     "clear": "DELETE FROM sessions",
-    "create": "INSERT INTO sessions (id, userId, createdAt) VALUES (?, ?, ?) RETURNING id, userId, createdAt;",
+    "create": "INSERT INTO sessions (id, userId) VALUES (?, ?) RETURNING id, userId, createdAt;",
     "fetch": "SELECT id, userId, createdAt FROM sessions WHERE id = ?;"
   }
 }
