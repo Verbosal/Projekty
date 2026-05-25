@@ -2,8 +2,8 @@
     <h2>Welcome user! Click <a href="/account/logout">here</a> to log out.</h2>
 
     <form id="create" method="post" action="/account/create">
-        <input name="title" id="title" type="text" placeholder="silly title!!!" required>
-        <input name="content" id="content" type="text" placeholder="i like silly things..." required>
+        <input name="title" id="title" type="text" placeholder="silly title!!!" minlength="1" maxlength="25" required>
+        <input name="content" id="content" type="text" placeholder="i like silly things..." minlength="1" maxlength="100" required>
         <button type="submit">Create silly post</button>
     </form>
     

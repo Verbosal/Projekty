@@ -1,6 +1,8 @@
-// Customizable variables
+// Customizable database variables
 
 // Optional operations at the start of every runtime, as defined in each file in the ./templates folder
+// Note: These operations won't run if you set runOperations in ../config.ts to false
+
 export default {
     // Whether to create something
     create : {
@@ -16,5 +18,3 @@ export default {
         admin_privileges : true     // Clear all admins' privileges
     }
 }
-
-// Used a typescript file so that I can put comments here!

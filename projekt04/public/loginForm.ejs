@@ -1,15 +1,15 @@
 <section id="loginForms">
     <p>You're not logged in!</p>
     <form id="login" method="post" action="/account/login">
-        <input name="username" type="text" placeholder="username" required>
-        <input name="password" type="text" placeholder="password" required>
+        <input name="username" type="text" placeholder="silly username" minlength="1" maxlength="20" required>
+        <input name="password" type="password" placeholder="silly password" minlength="1" maxlength="128" required>
         <button type="submit">Log in</button>
     </form>
 
     <p>Don't have account?</p>
     <form id="accountCreation" method="post" action="/account/create">
-        <input name="username" type="text" placeholder="username" required>
-        <input name="password" type="text" placeholder="password" required>
+        <input name="username" type="text" placeholder="silly username" minlength="1" maxlength="20" required>
+        <input name="password" type="password" placeholder="silly password" minlength="1" maxlength="128" required>
         <button type="submit">Create silly account</button>
     </form>
 </section>
