@@ -16,4 +16,4 @@ export default { // Optional operations at the start of every runtime, as define
     }
 }
 
-// Used a typescript file so that I can put comments here! How does JSON not accept comments bro
+// Used a typescript file so that I can put comments here!

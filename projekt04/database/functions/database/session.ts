@@ -72,4 +72,6 @@ export function sessionHandler(req : express.Request, res : express.Response, ne
       new Date(Number(session.created_at)).toISOString()
     );
   }
+
+  printUserSession();
 }

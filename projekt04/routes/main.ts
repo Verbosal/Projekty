@@ -1,5 +1,6 @@
 // Main web page route
 
+// Imports & declarations
 import express from "express";
 const router = express.Router();
 
