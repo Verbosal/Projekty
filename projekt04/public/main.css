@@ -1,7 +1,7 @@
 * {
     font-family: "Comic Sans MS", "Comic Sans", cursive;
 
-    text-shadow: cyan 1px 1px 1px;
+    text-shadow: cyan 1px 1px 0px;
 
     border-radius: 5px;
     border-width: 1px;
@@ -32,4 +32,8 @@ body {
     * {
         backdrop-filter: blur(5px) brightness(2) hue-rotate(45deg);
     }
+}
+
+footer {
+  margin-bottom: 15px;
 }
