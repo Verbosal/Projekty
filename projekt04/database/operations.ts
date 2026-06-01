@@ -2,12 +2,13 @@
 // Note: These operations won't run if you set runOperations in ../config.ts to false
 
 // Imports
-import config from "../config.ts";
+import config from "./config.ts";
 
 // Routes
-import * as user from "./database/users.ts";
-import * as admin from "./database/admins.ts";
-import * as post from "./database/posts.ts";
+import * as user from "./functions/users.ts";
+import * as admin from "./functions/admins.ts";
+import * as post from "./functions/posts.ts";
+import * as bans from "./functions/bans.ts";
 
 // Declarations
 let create = config.create;
@@ -22,7 +23,7 @@ let operations : {[String]: Function} = {
 
   clear : {
     ["users"] : user.clear,
-    ["bans"] : user.clearBans,
+    ["bans"] : bans.clear,
     ["posts"] : post.clear,
     ["adminPrivileges"] : admin.clear
   }

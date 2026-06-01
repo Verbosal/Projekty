@@ -36,8 +36,8 @@
   },
 
   "bans": {
-    "ban": "INSERT INTO bans (userId) VALUES (?);",
-    "unban": "DELETE FROM bans WHERE userId = ?;",
-    "isBanned" : "SELECT EXISTS(SELECT userId FROM bans WHERE userId = ?);"
+    "ban":      "INSERT INTO bans (userId) VALUES (?);",
+    "unban":    "DELETE FROM bans WHERE userId = ?;",
+    "isBanned": "SELECT EXISTS(SELECT userId FROM bans WHERE userId = ?);"
   }
 }

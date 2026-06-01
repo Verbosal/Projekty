@@ -2,8 +2,8 @@
 
 // Imports & declarations
 import argon2 from "argon2";
-import hashSecret from "../miscellaneous/secret.ts";
-import '../miscellaneous/random.ts';
+import hashSecret from "./miscellaneous/secret.ts";
+import './miscellaneous/random.ts';
 
 import statements from '../statements.ts';
 const ops = statements.users;

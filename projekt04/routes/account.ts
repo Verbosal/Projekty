@@ -4,11 +4,11 @@
 import express from "express";
 const router = express.Router();
 
-import "../database/functions/statements.ts"
+import "../database/statements.ts"
 
-import * as account from "../database/functions/database/users.ts";
-import * as session from "../database/functions/database/sessions.ts";
-import * as posts from "../database/functions/database/posts.ts";
+import * as account from "../database/functions/users.ts";
+import * as session from "../database/functions/sessions.ts";
+import * as posts from "../database/functions/posts.ts";
 
 router.post("/create", (req : express.Request, res : express.Response) => {
   let params = req.body

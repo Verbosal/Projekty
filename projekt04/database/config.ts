@@ -15,6 +15,7 @@ export default {
     clear : {
         users : true,               // Clear all users
         posts : true,               // Clear all posts
+        bans : true,                // Clear all bans
         adminPrivileges : true      // Clear all admins' privileges
     }
 }
