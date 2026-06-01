@@ -3,7 +3,7 @@
 // Imports & declarations
 import '../miscellaneous/random.ts';
 import statements from '../statements.ts';
-const ops = statements.post
+const ops = statements.posts;
 
 export function create(userId : number, title : string, content : string) {
     ops.create.run(userId, title, content);
@@ -22,13 +22,13 @@ export function fetchAll() {
 }
 
 export function populate() {
-    let templates = populationTemplates
+    // let templates = populationTemplates
 
-    templates.usernames.forEach((username)=>{
-        let operation = createUser(username, templates.passwords.random()).then(async ()=>{
-            createUser(await operation.userId, templates.titles.random(), templates.contents.random());
-        });
-    })
+    // templates.usernames.forEach((username)=>{
+    //     let operation = createUser(username, templates.passwords.random()).then(async ()=>{
+    //         createUser(await operation.userId, templates.titles.random(), templates.contents.random());
+    //     });
+    // })
 }
 
 export function clear() {

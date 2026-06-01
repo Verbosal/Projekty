@@ -6,13 +6,13 @@ import hashSecret from "../miscellaneous/secret.ts";
 import '../miscellaneous/random.ts';
 
 import statements from '../statements.ts';
-const ops = statements.user;
+const ops = statements.users;
 
 export function create(username : string, password : string) {
     var error = null;
 
     try {
-        ops.create.run(username, argon2.hash(password, hashSecret), Date.now());
+        ops.create.run(username, argon2.hash(password, hashSecret));
     } catch(caughtError) {
         error = caughtError;
     } finally {
@@ -45,13 +45,13 @@ export function logout(userId : number) {
 }
 
 export function populate() { //only users
-    let templates = populationTemplates
+    // let templates = populationTemplates
 
-    templates.usernames.forEach((username)=>{
-        let operation = addUser(username, templates.passwords.random()).then(async ()=>{
-            addPost(await operation.userId, templates.titles.random(), templates.contents.random());
-        });
-    })
+    // templates.usernames.forEach((username)=>{
+    //     let operation = addUser(username, templates.passwords.random()).then(async ()=>{
+    //         addPost(await operation.userId, templates.titles.random(), templates.contents.random());
+    //     });
+    // })
 }
 
 export function remove(userId : number) {
@@ -60,4 +60,8 @@ export function remove(userId : number) {
 
 export function clear() {
     ops.clear.run();
+}
+
+export function clearBans() {
+    statements.bans.clear.run();
 }

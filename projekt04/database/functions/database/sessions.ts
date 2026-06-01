@@ -7,7 +7,7 @@ import {DatabaseSync} from "node:sqlite";
 import {randomBytes} from "node:crypto";
 
 import statements from '../statements.ts';
-const ops = statements.session
+const ops = statements.sessions;
 
 const db = new DatabaseSync("./database/database.db", {readBigInts: true});
 

@@ -1,32 +1,37 @@
 // Executes optional operations before running the website defined in ../config.ts
+// Note: These operations won't run if you set runOperations in ../config.ts to false
 
 // Imports
-import mainConfig from "../config.ts";
-import secondaryConfig from "../../config.ts";
+import config from "../config.ts";
 
 // Routes
-import * as user from "./database/user.ts";
-import * as admin from "./database/admin.ts";
-import * as post from "./database/post.ts";
+import * as user from "./database/users.ts";
+import * as admin from "./database/admins.ts";
+import * as post from "./database/posts.ts";
 
 // Declarations
-let create = mainConfig.create;
-let clear = mainConfig.clear;
+let create = config.create;
+let clear = config.clear;
 
-let operations : {[Boolean]: Function} = {
-  [create.users] : user.populate,
-  [create.posts] : post.populate,
-  [create.admins] : admin.populate,
+let operations : {[String]: Function} = {
+  create : {
+    ["users"] : user.populate,
+    ["posts"] : post.populate,
+    ["admins"]: admin.populate
+  },
 
-  [clear.users] : user.clear,
-  [clear.posts] : post.clear,
-  [clear.admin_privileges] : admin.clear
+  clear : {
+    ["users"] : user.clear,
+    ["bans"] : user.clearBans,
+    ["posts"] : post.clear,
+    ["adminPrivileges"] : admin.clear
+  }
 }
 
-// Execute above operations, if allowed by ../../config.ts
-if (secondaryConfig.runOperations) {
-  for (let [check, operation] of Object.entries(operations)) {
-    if (check) {
+// Execute above operations
+for (let [name, set] of Object.entries(operations)) {
+  for (let [operationName, operation] of Object.entries(set)) {
+    if (config[name][operationName]) {
       operation()
     }
   }

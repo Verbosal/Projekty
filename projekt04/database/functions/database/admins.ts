@@ -1,0 +1,36 @@
+// Operations on admins
+
+// Imports & declarations
+import '../miscellaneous/random.ts';
+import statements from '../statements.ts';
+const ops = statements.admins
+
+export function checkIf(userId : number) : boolean {
+    return ops.isAdmin.run(userId);
+}
+
+export function grant(userId : number) {
+    ops.grant.run(userId);
+}
+
+export function populate() {
+    // let templates = populationTemplates;
+
+    // templates.usernames.forEach((username)=>{
+    //     let operation = addUser(username, templates.passwords.random()).then(async ()=>{
+    //         addPost(await operation.userId, templates.titles.random(), templates.contents.random());
+    //     });
+    // })
+
+    // admins.forEach(async (admin)=>{
+    //     grantAdmin(await addUser(admin.username, admin.password).userId);
+    // })
+}
+
+export function revoke(userId : number) {
+    ops.revoke.run(userId);
+}
+
+export function clear() {
+    ops.clear.run();
+}

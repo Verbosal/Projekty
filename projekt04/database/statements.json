@@ -1,40 +1,43 @@
 {
   "database": {
-    "clear": "BEGIN TRANSACTION;"
+    "clear":  "BEGIN TRANSACTION; %s COMMIT;"
   },
 
-  "admin": {
-    "clear": "DELETE FROM admins; DELETE FROM sqlite_sequence WHERE name = admins;",
-    "grant": "INSERT INTO admins(userID) VALUES (?);",
-    "revoke": "DELETE FROM admins WHERE userID = ?;",
-    "check": "SELECT EXISTS(SELECT userId FROM admins WHERE userId = ?);"
+  "admins": {
+    "grant":  "INSERT INTO admins(userId) VALUES (?);",
+    "revoke": "DELETE FROM admins WHERE userId = ?;",
+    "isAdmin":"SELECT EXISTS(SELECT userId FROM admins WHERE userId = ?);"
   },
 
-  "post": {
-    "clear": "DELETE FROM posts; DELETE FROM sqlite_sequence WHERE name = posts;",
-    "create": "INSERT INTO users(username, passhash) VALUES (?, ?) RETURNING id;",
+  "posts": {
+    "create": "INSERT INTO posts (title, content) VALUES (?, ?);",
     "remove": "DELETE FROM posts WHERE id = ?;",
     
     "fetch": {
-      "post": "SELECT userId, title, content FROM posts WHERE id = ?;",
+      "post":     "SELECT userId, title, content FROM posts WHERE id = ?;",
       "allPosts": "SELECT id, title, content FROM posts;"
     }
   },
 
-  "user": {
-    "clear": "DELETE FROM users; DELETE FROM sqlite_sequence WHERE name = users;",
-    "remove": "DELETE FROM users WHERE userId = ?;",
+  "users": {
+    "create": "INSERT INTO users (username, passhash) VALUES (?, ?) RETURNING id;",
+    "remove": "DELETE FROM users WHERE id = ?;",
 
     "fetch": {
-      "username": "SELECT username FROM users WHERE id = ?;",
-      "info": "SELECT username, passhash FROM users WHERE userId = ?;",
+      "username":     "SELECT username FROM users WHERE id = ?;",
+      "info":         "SELECT username, passhash FROM users WHERE id = ?;",
       "allUsernames": "SELECT username FROM users;"
     }
   },
 
-  "session": {
-    "clear": "DELETE FROM sessions; DELETE FROM sqlite_sequence WHERE name = sessions;",
+  "sessions": {
     "create": "INSERT INTO sessions (id, userId) VALUES (?, ?) RETURNING id, userId, createdAt;",
-    "fetch": "SELECT id, userId, createdAt FROM sessions WHERE id = ?;"
+    "fetch":  "SELECT id, userId, createdAt FROM sessions WHERE id = ?;"
+  },
+
+  "bans": {
+    "ban": "INSERT INTO bans (userId) VALUES (?);",
+    "unban": "DELETE FROM bans WHERE userId = ?;",
+    "isBanned" : "SELECT EXISTS(SELECT userId FROM bans WHERE userId = ?);"
   }
 }

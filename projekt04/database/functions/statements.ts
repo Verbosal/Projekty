@@ -8,11 +8,16 @@ const db = new sqlite3.Database("./database/database.db");
 // Add a "clear all" statement to database operations
 for (let [table, operations] of Object.entries(statements)) {
     if (table != "database") {
-        statements.database.clear += " " + operations.clear;
+        let tableName = table
+        table = statements[table]
+
+        table["clear"] = `DELETE FROM ${tableName}; DELETE FROM sqlite_sequence WHERE name = ${tableName};`;
+
+        statements.database.clear = statements.database.clear.replace("%s", table["clear"] + " %s");
     }
 }
 
-statements.database.clear += " COMMIT;"; // Close statement
+statements.database.clear.replaceAll("%s", ""); // Remove leftover
 
 // Modify (prepare) all statements for SQL
 function recursivelyPrepare(directory : any) {
